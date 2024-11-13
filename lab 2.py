@@ -1,5 +1,5 @@
-from math import *
 
+ESP = 1e-6
 def koren(x, y):
     return x**(1/y)
 
@@ -9,7 +9,7 @@ def task1():
         x = int(input("x ="))
         y = int(input("y ="))
         z = int(input("z ="))
-        if (koren(x, 5)+koren(y, 6)+ log(4, 2)) != 0 and y>0:
+        if (koren(x, 5)+koren(y, 6)+ log(4, 2)) != 0 and y>ESP:
             data = True
         else:
             print("введите другие данные")
@@ -53,4 +53,8 @@ def task5():
     l = m*v/k
     print(f"l = {l}")
 
-def task6():
+#def task6():
+    #sp = int(input("l ="))
+    #r = sp*4/pi
+
+#def task7():
