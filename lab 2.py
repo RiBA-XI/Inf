@@ -1,4 +1,4 @@
-
+rom math import *
 ESP = 1e-6
 def koren(x, y):
     return x**(1/y)
@@ -9,7 +9,7 @@ def task1():
         x = int(input("x ="))
         y = int(input("y ="))
         z = int(input("z ="))
-        if (koren(x, 5)+koren(y, 6)+ log(4, 2)) != 0 and y>ESP:
+        if (koren(x, 5)+koren(y, 6)+ log(4, 2)) != 0 and y>ESP and (x-1)>=0-1:
             data = True
         else:
             print("введите другие данные")
@@ -35,9 +35,8 @@ def task4():
     r = int(input("r ="))
     R = int(input("R ="))
     h = int(input("h ="))
-    l = koren(((R-r)/2)**2+h**2, 2)
+    l = koren(((R-r)**2)**2+h**2, 2)
     print(f"l = {l}")
-    #считает не верное значение
 
 def task5():
     m = int(input("m ="))
@@ -57,4 +56,5 @@ def task5():
     #sp = int(input("l ="))
     #r = sp*4/pi
 
-#def task7():
+def task7():
+    distance = abs(x2 - x1)
