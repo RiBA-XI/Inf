@@ -6,7 +6,8 @@ from PyQt5.QtWidgets import (
  QPushButton,
  QVBoxLayout,
  QWidget,
- QMessageBox, QListWidget, QListWidgetItem
+ QMessageBox, QListWidget, QListWidgetItem, QFileDialog
+
 )
 
 import numpy as np
@@ -140,7 +141,18 @@ class MainWindow(QMainWindow):
             self.selected_function = None
 
     def save_plot_points(self):
-        filename = "plot_data.txt"
+        # Открываем диалоговое окно "Сохранить как..."
+        options = QFileDialog.Options()
+        filename, _ = QFileDialog.getSaveFileName(self, "Сохранить точки графика в файл", "plot_data.txt")
+
+        # Если пользователь нажал "Отмена", filename будет пустой строкой
+        if not filename:
+            return
+
+        # Добавляем расширение .txt, если пользователь его не указал
+        if not filename.endswith(".txt"):
+            filename += ".txt"
+
         with open(filename, "w") as f:
             for i in range(len(self.x)):
                 f.write(f"{self.x[i]}\t{self.y[i]}\n")
