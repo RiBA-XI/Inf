@@ -18,7 +18,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 class MainWindow(QMainWindow):
     def plot_data(self):
         if self.selected_function is None:
-            QMessageBox.warning(self, "Ошибка", "добавте функцию")
+            QMessageBox.warning(self, "Ошибка", "выберите функцию")
             return
 
         try:
@@ -33,12 +33,7 @@ class MainWindow(QMainWindow):
             range_start = 0
             range_end = 1
 
-        try:
-            num_point = int(self.num_points_input.text())
-        except ValueError:
-            num_point = 50
-
-        x = np.linspace(range_start, range_end, num_point)
+        x = np.linspace(range_start, range_end, int(self.point_count_input.text()))
         functions = {}  # определим словарь функций
         exec(f"def f(x): return {self.selected_function}", functions)
         function = functions["f"]
@@ -58,7 +53,9 @@ class MainWindow(QMainWindow):
             self.canvas.draw()
         except Exception as e:
             QMessageBox.critical(self, "Ошибка", f"Ошибка при очистке графика: {e}")
-
+    def save_plot_data(x, y): #save_points_to_txt
+        with open("hello.txt", "w") as my_file:
+            my_file.write("")
 
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
@@ -79,11 +76,11 @@ class MainWindow(QMainWindow):
         self.add_function_button.clicked.connect(self.add_function)
         self.function_list = QListWidget()
         self.function_list.itemSelectionChanged.connect(self.update_selected_function)
-        self.range_label = QLabel("Диапазон:")
+        self.range_label = QLabel("Диапазон по оси x:")
         self.range_start_input = QLineEdit('0')
         self.range_end_input = QLineEdit('1')
-        self.plot_point_count = QLabel("Количество точек для отрисовки графика")
-        self.num_points_input = QLineEdit('50')
+        self.num_points = QLabel("количество точек для построения графика:")
+        self.point_count_input = QLineEdit('50')
 
         # Создание центрального виджета
         central_widget = QWidget()
@@ -101,8 +98,8 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.range_label)
         layout.addWidget(self.range_start_input)
         layout.addWidget(self.range_end_input)
-        layout.addWidget(self.plot_point_count)
-        layout.addWidget(self.num_points_input)
+        layout.addWidget(self.num_points)
+        layout.addWidget(self.point_count_input)
 
         # Установка центрального виджета
         self.setCentralWidget(central_widget)
@@ -132,7 +129,6 @@ class MainWindow(QMainWindow):
             self.selected_function = selected_items[0].text()
         else:
             self.selected_function = None
-
 
 # Создать приложение QApplication
 app = QApplication([])
