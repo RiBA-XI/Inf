@@ -40,9 +40,10 @@ class MainWindow(QMainWindow):
             num_point = 50
 
         x = np.linspace(range_start, range_end, num_point)
-        functions = {}  # определим словарь функций
-        exec(f"def f(x): return {self.selected_function}", functions)
-        function = functions["f"]
+        #functions = {}  # определим словарь функций
+        #exec(f"def f(x): return {self.selected_function}", functions)  ###############################
+        function = self.selected_function["f"]
+        #self.functions  # обращаемся к массиву объекта и получаем из него функции
         y = [function(value) for value in x]
 
         self.figure.clf()  # Очищаем всю фигуру
@@ -117,13 +118,25 @@ class MainWindow(QMainWindow):
 
     def add_function(self):#добовляем функцию в список выбора
         function_text = self.function_input.text()
-        if function_text!="":
+
+        #exec(f"def f(x): return {self.selected_function}", functions)
+        try:
+            function = exec(f"lambda x: {function_text}")
             item = QListWidgetItem(function_text)
             self.function_list.addItem(item)
             self.functions.append(function_text)
             self.function_input.clear()
-        else:
-            QMessageBox.warning(self, "Ошибка", "функция введена не верно")
+
+        except NameError as e:
+            QMessageBox.warning(self, "Ошибка", "функция введена не верно exept")
+        except SyntaxError as e:
+            QMessageBox.warning(self, "Ошибка", "функция введена не верно exept")
+        except TypeError as e:
+            QMessageBox.warning(self, "Ошибка", "функция введена не верно exept")
+        except ValueError as e:
+            QMessageBox.warning(self, "Ошибка", "функция введена не верно exept")
+        # except Exception as e:
+        #     QMessageBox.warning(self, "Ошибка", "функция введена не верно exept")
 
         # try:
         #     item = QListWidgetItem(function_text)
@@ -145,12 +158,11 @@ class MainWindow(QMainWindow):
         options = QFileDialog.Options()
         filename, _ = QFileDialog.getSaveFileName(self, "Сохранить точки графика в файл", "plot_data.txt")
 
-        # Если пользователь нажал "Отмена", filename будет пустой строкой
-        if not filename:
-            return
+        # # Если пользователь нажал "Отмена", filename будет пустой строкой
+        # if not filename:
+        #     return
 
-        # Добавляем расширение .txt, если пользователь его не указал
-        if not filename.endswith(".txt"):
+        if not filename.endswith(".txt"): # Добавляем расширение .txt, если пользователь его не указал
             filename += ".txt"
 
         with open(filename, "w") as f:
