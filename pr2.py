@@ -17,54 +17,6 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
 
 class MainWindow(QMainWindow):
-    def plot_data(self):
-        if self.selected_function is None:
-            QMessageBox.warning(self, "Ошибка", "выберите функцию")
-            return
-
-        try:
-            expression = self.function_input.text()
-        except ValueError:
-            expression = "x**3"
-
-        try:
-            range_start = float(self.range_start_input.text())
-            range_end = float(self.range_end_input.text())
-        except ValueError:
-            range_start = 0
-            range_end = 1
-
-        try:
-            num_point = int(self.num_points_input.text())
-        except ValueError:
-            num_point = 50
-
-        x = np.linspace(range_start, range_end, num_point)
-        #functions = {}  # определим словарь функций
-        #exec(f"def f(x): return {self.selected_function}", functions)  ###############################
-        function = self.selected_function["f"]
-        #self.functions  # обращаемся к массиву объекта и получаем из него функции
-        y = [function(value) for value in x]
-
-        self.figure.clf()  # Очищаем всю фигуру
-        plt.plot(x, y)
-        plt.grid(True)
-        plt.xlabel('x')
-        plt.ylabel('y')
-        plt.title('График функции: ' + self.selected_function)
-        self.canvas.draw()
-
-        self.x = x
-        self.y = y
-
-    def clear_plot(self):
-        try:
-            self.figure.clf()  # Очищаем всю figure
-            self.canvas.draw()
-        except Exception as e:
-            QMessageBox.critical(self, "Ошибка", f"Ошибка при очистке графика: {e}")
-
-
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setWindowTitle("График")
@@ -116,27 +68,16 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
         self.selected_function = None
 
+
     def add_function(self):#добовляем функцию в список выбора
         function_text = self.function_input.text()
-
-        #exec(f"def f(x): return {self.selected_function}", functions)
-        try:
-            function = exec(f"lambda x: {function_text}")
+        if function_text!="":
             item = QListWidgetItem(function_text)
             self.function_list.addItem(item)
             self.functions.append(function_text)
             self.function_input.clear()
-
-        except NameError as e:
-            QMessageBox.warning(self, "Ошибка", "функция введена не верно exept")
-        except SyntaxError as e:
-            QMessageBox.warning(self, "Ошибка", "функция введена не верно exept")
-        except TypeError as e:
-            QMessageBox.warning(self, "Ошибка", "функция введена не верно exept")
-        except ValueError as e:
-            QMessageBox.warning(self, "Ошибка", "функция введена не верно exept")
-        # except Exception as e:
-        #     QMessageBox.warning(self, "Ошибка", "функция введена не верно exept")
+        else:
+            QMessageBox.warning(self, "Ошибка", "функция введена не верно")
 
         # try:
         #     item = QListWidgetItem(function_text)
@@ -146,6 +87,7 @@ class MainWindow(QMainWindow):
         # except ***:
         #     QMessageBox.warning(self, "Ошибка", "функция введена не верно")
 
+
     def update_selected_function(self):#выбор функции для отрисовки из списка
         selected_items = self.function_list.selectedItems()
         if selected_items:
@@ -153,16 +95,66 @@ class MainWindow(QMainWindow):
         else:
             self.selected_function = None
 
+
+    def plot_data(self):
+        if self.selected_function is None:
+            QMessageBox.warning(self, "Ошибка", "выберите функцию")
+            return
+
+        try:
+            expression = self.function_input.text()
+        except ValueError:
+            expression = "x**3"
+
+        try:
+            range_start = float(self.range_start_input.text())
+            range_end = float(self.range_end_input.text())
+        except ValueError:
+            range_start = 0
+            range_end = 1
+
+        try:
+            num_point = int(self.num_points_input.text())
+        except ValueError:
+            num_point = 50
+
+        x = np.linspace(range_start, range_end, num_point)
+        functions = {}  # определим словарь функций
+        exec(f"def f(x): return {self.selected_function}", functions)
+        function = functions["f"]
+        y = [function(value) for value in x]
+
+        self.figure.clf()  # Очищаем всю фигуру
+        plt.plot(x, y)
+        plt.grid(True)
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.title('График функции: ' + self.selected_function)
+        self.canvas.draw()
+
+        self.x = x
+        self.y = y
+
+
+    def clear_plot(self):
+        try:
+            self.figure.clf()  # Очищаем всю figure
+            self.canvas.draw()
+        except Exception as e:
+            QMessageBox.critical(self, "Ошибка", f"Ошибка при очистке графика: {e}")
+
+
     def save_plot_points(self):
         # Открываем диалоговое окно "Сохранить как..."
         options = QFileDialog.Options()
         filename, _ = QFileDialog.getSaveFileName(self, "Сохранить точки графика в файл", "plot_data.txt")
 
-        # # Если пользователь нажал "Отмена", filename будет пустой строкой
-        # if not filename:
-        #     return
+        # Если пользователь нажал "Отмена", filename будет пустой строкой
+        if not filename:
+            return
 
-        if not filename.endswith(".txt"): # Добавляем расширение .txt, если пользователь его не указал
+        # Добавляем расширение .txt, если пользователь его не указал
+        if not filename.endswith(".txt"):
             filename += ".txt"
 
         with open(filename, "w") as f:
