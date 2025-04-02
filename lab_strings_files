@@ -1,0 +1,63 @@
+import random
+import string
+
+def  task1(n):
+    def print_char_list(array):
+        for char in array:
+            print(char)
+
+    characters = string.ascii_letters + string.digits
+    char_array = [random.choice(characters) for _ in range(n)]
+    print_char_list(char_array)
+
+    # modified_array = ['*' if char.isdigit() else char for char in char_array]
+    modified_array = []
+    for char in char_array:
+        if char.isdigit():
+            modified_array.append('*')
+        else:
+            modified_array.append(char)
+    print_char_list(modified_array)
+
+def  task2():
+    def print_char_2d_array(array):
+        for y in array:
+            for char in y:
+                print(char, end=" ")
+            print()
+    def preobrazovanie(array):
+        char_star_in_array = {}
+        for y in array:
+            for char in y:
+                if char == "*":
+                    k = 1
+                    coordinate_lst_srar = ()
+                    # char_star_in_array[y] = char
+                    # 1 цикл  1 круг каждый следующий больше на 1r
+                    while char_star_in_r == True:
+                        k_in_r = 0
+                        # def для проверки неличия зведочки на поределееных кординатах
+                        # def proverka(y, char): #rename def
+                        if array[y][char+1] == "*":
+                            k_in_r += 1
+                        elif array[y-1][char+1] == "*":
+                            k_in_r += 1
+                        elif array[y-1][char] == "*":
+                            k_in_r += 1
+                        elif array[y-1][char-1] == "*":
+                            k_in_r += 1
+                        k += k_in_r
+                        if k_in_r > 0: #except k_in_r == 1
+                            char_star_in_r = True
+
+        return
+
+    def create_random_2d_array(n):
+        characters = ['.', '*']  # Возможные символы
+        array = []
+        for _ in range(n + 1):
+            row = [random.choice(characters) for _ in range(n + 1)]
+            array.append(row)
+        return array
+    print_char_2d_array(create_random_2d_array(5))
+task2()
