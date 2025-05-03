@@ -71,8 +71,10 @@ class MainWindow(QMainWindow):
     def add_function(self):
         try:
             expression = self.function_input.text()
-            # Создаем лямбда-функцию в безопасном окружении  проверить, можно ли вычислить функцию с каким-либо значением, и выбросить исключение до того, как функция будет добавлена
-            func = eval(f"lambda x: {expression}", {"__builtins__": None}, {"x": None, "np": np, "sin": np.sin, "cos": np.cos, "tan": np.tan, "exp": np.exp, "log": np.log, "sqrt": np.sqrt, "pi": np.pi}) # add more functions as needed
+            # Создаем лямбда-функцию в безопасном окружении  проверить, можно ли вычислить функцию с каким-либо значением,
+            # и выбросить исключение до того, как функция будет добавлена
+            func = eval(f"lambda x: {expression}", {"__builtins__": None}, {"x": None, "np": np, "sin": np.sin, "cos": np.cos, "tan": np.tan, \
+                        "exp": np.exp, "log": np.log, "sqrt": np.sqrt, "pi": np.pi}) # add more functions as needed
 
             # Тестируем функцию, чтобы выявить ошибки
             test_value = 0
@@ -96,30 +98,27 @@ class MainWindow(QMainWindow):
         else:
             self.selected_function = None
 
-
-    def plot_data(self):
         if self.selected_function is None:
             QMessageBox.warning(self, "Ошибка", "Выберите функцию")
             return
-
         range_start = float(self.range_start_input.text())
         range_end = float(self.range_end_input.text())
         num_point = int(self.num_points_input.text())
-
         x = np.linspace(range_start, range_end, num_point)
         y = self.selected_function(x)
+        self.x = x
+        self.y = y
 
+
+    def plot_data(self):
         self.figure.clear()
         ax = self.figure.add_subplot(111)
-        ax.plot(x, y)
+        ax.plot(self.x, self.y)
         ax.grid(True)
         ax.set_xlabel('x')
         ax.set_ylabel('y')
         ax.set_title(f'График функции: {self.function_input.text()}')
         self.canvas.draw()
-
-        self.x = x
-        self.y = y
 
 
     def clear_plot(self):
@@ -142,7 +141,7 @@ class MainWindow(QMainWindow):
 
         with open(filename, "w") as f:
             for i in range(len(self.x)):
-                f.write(f"{self.x[i]}\t{self.y[i]}\n")
+                f.write(f"{self.x[i]:.6f}\t{self.y[i]:.6f}\n")
             QMessageBox.information(self, "Успешно", f"Данные графика успешно сохранены в файл {filename}")
 
 
