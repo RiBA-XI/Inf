@@ -19,67 +19,78 @@ def  task1(n):
             modified_array.append(char)
     print_char_list(modified_array)
 
-def  task2():
-    def print_char_2d_array(array):
-        for y in array:
-            for char in y:
-                print(char, end=" ")
-            print()
-    def preobrazovanie(array):
-        char_star_in_array = {}
-        for y in array:
-            for char in y:
-                if char == "*":
-                    k = 1
-                    coordinate_lst_srar = ()
-                    # char_star_in_array[y] = char
-                    # 1 цикл  1 круг каждый следующий больше на 1r
-                    while char_star_in_r == True:
-                        k_in_r = 0
-                        # def для проверки неличия зведочки на поределееных кординатах
-                        # def proverka(y, char): #rename def
-                        if array[y][char+1] == "*":
-                            k_in_r += 1
-                        elif array[y-1][char+1] == "*":
-                            k_in_r += 1
-                        elif array[y-1][char] == "*":
-                            k_in_r += 1
-                        elif array[y-1][char-1] == "*":
-                            k_in_r += 1
-                        k += k_in_r
-                        if k_in_r > 0: #except k_in_r == 1
-                            char_star_in_r = True
 
-        return
-
-    def create_random_2d_array(n):
-        characters = ['.', '*']  # Возможные символы
-        array = []
-        for _ in range(n + 1):
-            row = [random.choice(characters) for _ in range(n + 1)]
-            array.append(row)
-        return array
-    print_char_2d_array(create_random_2d_array(5))
-task2()
-
-
-import random
-
+#Задание 2. Двухмерный массив символов
 def print_char_2d_array(array):
-    for row in array:
-        print(' '.join(str(elem) for elem in row))
-    print()
+    for y in array:
+        for char in y:
+            print(char, end=" ")
+        print()
 
-def preobrazovanie(array):
+# def preobrazovanie(array): #точки не одиночные заменаяет на количество в цепочке
+#     n = len(array)
+#     m = len(array[0]) if n > 0 else 0
+#     visited = [[False] * m for _ in range(n)]
+#
+#     # Функция для поиска односвязной последовательности от точки (i,j)
+#     # по одному направлению (вправо или вниз), выбираем направление, если есть два варианта
+#     def find_sequence(i, j):
+#         symbol = array[i][j]
+#         # Проверяем направление вправо
+#         length_right = 1
+#         positions_right = [(i, j)]
+#         x, y = i, j + 1
+#         while y < m and array[x][y] == symbol:
+#             positions_right.append((x, y))
+#             length_right += 1
+#             y += 1
+#
+#         # Проверяем направление вниз
+#         length_down = 1
+#         positions_down = [(i, j)]
+#         x, y = i + 1, j
+#         while x < n and array[x][y] == symbol:
+#             positions_down.append((x, y))
+#             length_down += 1
+#             x += 1
+#
+#         # Выбираем направление с большей длиной
+#         if length_right > length_down and length_right > 1:
+#             return positions_right, length_right
+#         elif length_down >= length_right and length_down > 1:
+#             return positions_down, length_down
+#         else:
+#             # Нет последовательности > 1
+#             return [(i, j)], 1
+#
+#     # Создаем копию массива, чтобы заменять символы на числа
+#     result = [row[:] for row in array]
+#
+#     for i in range(n):
+#         for j in range(m):
+#             if not visited[i][j]:
+#                 seq_positions, length = find_sequence(i, j)
+#                 # Помечаем позиции как посещённые
+#                 for (x, y) in seq_positions:
+#                     visited[x][y] = True
+#                 # Заменяем символы в последовательности на длину
+#                 # for (x, y) in seq_positions:
+#                 #     result[x][y] = length
+#                 for (x, y) in seq_positions:
+#                     if length == 1 and array[x][y] == '.':
+#                         result[x][y] = '.'
+#                     else:
+#                         result[x][y] = length
+#
+#     return result
+
+def preobrazovanie(array): #исправленный вариант
     n = len(array)
     m = len(array[0]) if n > 0 else 0
     visited = [[False]*m for _ in range(n)]
 
-    # Функция для поиска односвязной последовательности от точки (i,j)
-    # по одному направлению (вправо или вниз), выбираем направление, если есть два варианта
     def find_sequence(i, j):
         symbol = array[i][j]
-        # Проверяем направление вправо
         length_right = 1
         positions_right = [(i, j)]
         x, y = i, j+1
@@ -88,7 +99,6 @@ def preobrazovanie(array):
             length_right += 1
             y += 1
 
-        # Проверяем направление вниз
         length_down = 1
         positions_down = [(i, j)]
         x, y = i+1, j
@@ -97,30 +107,95 @@ def preobrazovanie(array):
             length_down += 1
             x += 1
 
-        # Выбираем направление с большей длиной
         if length_right > length_down and length_right > 1:
             return positions_right, length_right
         elif length_down >= length_right and length_down > 1:
             return positions_down, length_down
         else:
-            # Нет последовательности > 1
             return [(i, j)], 1
 
-    # Создаем копию массива, чтобы заменять символы на числа
     result = [row[:] for row in array]
 
     for i in range(n):
         for j in range(m):
             if not visited[i][j]:
                 seq_positions, length = find_sequence(i, j)
-                # Помечаем позиции как посещённые
                 for (x, y) in seq_positions:
                     visited[x][y] = True
-                # Заменяем символы в последовательности на длину
                 for (x, y) in seq_positions:
-                    result[x][y] = length
+                    #оставляем точку
+                    if array[x][y] == '.':
+                        result[x][y] = '.'
+                    else:
+                        #заменяем на длину последовательности
+                        result[x][y] = length
 
     return result
+
+#     def create_random_2d_array(n):
+#         characters = ['.', '*']  # Возможные символы
+#         array = []
+#         for _ in range(n + 1):
+#             row = [random.choice(characters) for _ in range(n + 1)]
+#             array.append(row)
+#         return array
+#     print_char_2d_array(create_random_2d_array(5))
+# task2()
+#
+# import random
+
+
+# def preobrazovanie(array):
+#     n = len(array)
+#     m = len(array[0]) if n > 0 else 0
+#     visited = [[False]*m for _ in range(n)]
+#
+#     # Функция для поиска односвязной последовательности от точки (i,j)
+#     # по одному направлению (вправо или вниз), выбираем направление, если есть два варианта
+#     def find_sequence(i, j):
+#         symbol = array[i][j]
+#         # Проверяем направление вправо
+#         length_right = 1
+#         positions_right = [(i, j)]
+#         x, y = i, j+1
+#         while y < m and array[x][y] == symbol:
+#             positions_right.append((x, y))
+#             length_right += 1
+#             y += 1
+#
+#         # Проверяем направление вниз
+#         length_down = 1
+#         positions_down = [(i, j)]
+#         x, y = i+1, j
+#         while x < n and array[x][y] == symbol:
+#             positions_down.append((x, y))
+#             length_down += 1
+#             x += 1
+#
+#         # Выбираем направление с большей длиной
+#         if length_right > length_down and length_right > 1:
+#             return positions_right, length_right
+#         elif length_down >= length_right and length_down > 1:
+#             return positions_down, length_down
+#         else:
+#             # Нет последовательности > 1
+#             return [(i, j)], 1
+#
+#     # Создаем копию массива, чтобы заменять символы на числа
+#     result = [row[:] for row in array]
+#
+#     for i in range(n):
+#         for j in range(m):
+#             if not visited[i][j]:
+#                 seq_positions, length = find_sequence(i, j)
+#                 # Помечаем позиции как посещённые
+#                 for (x, y) in seq_positions:
+#                     visited[x][y] = True
+#                 # Заменяем символы в последовательности на длину
+#                 for (x, y) in seq_positions:
+#                     result[x][y] = length
+#
+#     return result
 
 def task2():
     n = 4  # размер (n+1) x (n+1), например 5x5
@@ -136,56 +211,5 @@ def task2():
 
     print("Преобразованный массив:")
     print_char_2d_array(transformed)
- 
-if __name__ == "__main__":
-    task2()
 
-
-
-def preobrazovanie(array):
-    n = len(array)
-    m = len(array[0]) if n > 0 else 0
-    visited = [[False]*m for _ in range(n)]
-
-    def find_sequence(i, j):
-        symbol = array[i][j]
-        length_right = 1
-        positions_right = [(i, j)]
-        x, y = i, j+1
-        while y < m and array[x][y] == symbol:
-            positions_right.append((x, y))
-            length_right += 1
-            y += 1
-
-        length_down = 1
-        positions_down = [(i, j)]
-        x, y = i+1, j
-        while x < n and array[x][y] == symbol:
-            positions_down.append((x, y))
-            length_down += 1
-            x += 1
-
-        if length_right > length_down and length_right > 1:
-            return positions_right, length_right
-        elif length_down >= length_right and length_down > 1:
-            return positions_down, length_down
-        else:
-            return [(i, j)], 1
-
-    result = [row[:] for row in array]
-
-    for i in range(n):
-        for j in range(m):
-            if not visited[i][j]:
-                seq_positions, length = find_sequence(i, j)
-                for (x, y) in seq_positions:
-                    visited[x][y] = True
-                for (x, y) in seq_positions:
-                    # Если символ точка — оставляем точку
-                    if array[x][y] == '.':
-                        result[x][y] = '.'
-                    else:
-                        # Иначе заменяем на длину последовательности
-                        result[x][y] = length
-
-    return result
+task2()
