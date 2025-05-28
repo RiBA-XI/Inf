@@ -61,3 +61,81 @@ def  task2():
         return array
     print_char_2d_array(create_random_2d_array(5))
 task2()
+
+
+import random
+
+def print_char_2d_array(array):
+    for row in array:
+        print(' '.join(str(elem) for elem in row))
+    print()
+
+def preobrazovanie(array):
+    n = len(array)
+    m = len(array[0]) if n > 0 else 0
+    visited = [[False]*m for _ in range(n)]
+
+    # Функция для поиска односвязной последовательности от точки (i,j)
+    # по одному направлению (вправо или вниз), выбираем направление, если есть два варианта
+    def find_sequence(i, j):
+        symbol = array[i][j]
+        # Проверяем направление вправо
+        length_right = 1
+        positions_right = [(i, j)]
+        x, y = i, j+1
+        while y < m and array[x][y] == symbol:
+            positions_right.append((x, y))
+            length_right += 1
+            y += 1
+
+        # Проверяем направление вниз
+        length_down = 1
+        positions_down = [(i, j)]
+        x, y = i+1, j
+        while x < n and array[x][y] == symbol:
+            positions_down.append((x, y))
+            length_down += 1
+            x += 1
+
+        # Выбираем направление с большей длиной
+        if length_right > length_down and length_right > 1:
+            return positions_right, length_right
+        elif length_down >= length_right and length_down > 1:
+            return positions_down, length_down
+        else:
+            # Нет последовательности > 1
+            return [(i, j)], 1
+
+    # Создаем копию массива, чтобы заменять символы на числа
+    result = [row[:] for row in array]
+
+    for i in range(n):
+        for j in range(m):
+            if not visited[i][j]:
+                seq_positions, length = find_sequence(i, j)
+                # Помечаем позиции как посещённые
+                for (x, y) in seq_positions:
+                    visited[x][y] = True
+                # Заменяем символы в последовательности на длину
+                for (x, y) in seq_positions:
+                    result[x][y] = length
+
+    return result
+
+def task2():
+    n = 4  # размер (n+1) x (n+1), например 5x5
+    symbols = ['.', '*']
+
+    # Создаем случайный массив
+    array = [[random.choice(symbols) for _ in range(n+1)] for _ in range(n+1)]
+
+    print("Исходный массив:")
+    print_char_2d_array(array)
+
+    transformed = preobrazovanie(array)
+
+    print("Преобразованный массив:")
+    print_char_2d_array(transformed)
+
+if __name__ == "__main__":
+    task2()
