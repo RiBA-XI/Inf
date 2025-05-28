@@ -136,6 +136,56 @@ def task2():
 
     print("Преобразованный массив:")
     print_char_2d_array(transformed)
-
+ 
 if __name__ == "__main__":
     task2()
+
+
+
+def preobrazovanie(array):
+    n = len(array)
+    m = len(array[0]) if n > 0 else 0
+    visited = [[False]*m for _ in range(n)]
+
+    def find_sequence(i, j):
+        symbol = array[i][j]
+        length_right = 1
+        positions_right = [(i, j)]
+        x, y = i, j+1
+        while y < m and array[x][y] == symbol:
+            positions_right.append((x, y))
+            length_right += 1
+            y += 1
+
+        length_down = 1
+        positions_down = [(i, j)]
+        x, y = i+1, j
+        while x < n and array[x][y] == symbol:
+            positions_down.append((x, y))
+            length_down += 1
+            x += 1
+
+        if length_right > length_down and length_right > 1:
+            return positions_right, length_right
+        elif length_down >= length_right and length_down > 1:
+            return positions_down, length_down
+        else:
+            return [(i, j)], 1
+
+    result = [row[:] for row in array]
+
+    for i in range(n):
+        for j in range(m):
+            if not visited[i][j]:
+                seq_positions, length = find_sequence(i, j)
+                for (x, y) in seq_positions:
+                    visited[x][y] = True
+                for (x, y) in seq_positions:
+                    # Если символ точка — оставляем точку
+                    if array[x][y] == '.':
+                        result[x][y] = '.'
+                    else:
+                        # Иначе заменяем на длину последовательности
+                        result[x][y] = length
+
+    return result
