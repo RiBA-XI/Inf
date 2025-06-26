@@ -1,0 +1,16 @@
+x=linspace(a,b,n) ;
+g=figure (1);
+ax-axes (g)
+hold on grid on
+xlabel('x')
+ylabel('Y')
+plot (x, f(x), 'b-')
+ax. XLim=[a;b];
+ax.XTick=[-5:7];
+eps=1e-5;
+m=3;
+tau=. 05;
+for j=1:m
+iter=1;
+x1=-1,8;
+x2=x1-tau*f(x1);
