@@ -1,0 +1,53 @@
+clc;
+clear;
+close all;
+format shorte;
+
+f = @(x) (x + 1).^2;
+a = -3;
+b = 1;
+eps = 1e-6;
+
+x1 = a;
+x3 = b;
+x2 = (x1 + x3)/2;
+
+while abs(x3 - x1) > eps
+    f1 = f(x1);
+    f2 = f(x2);
+    f3 = f(x3);
+    
+    numerator = (x2 - x1)^2*(f2 - f3) - (x2 - x3)^2*(f2 - f1);
+    denominator = 2*((x2 - x1)*(f2 - f3) - (x2 - x3)*(f2 - f1));
+    
+    if denominator == 0  % Проверка деления на ноль
+        break;
+    end
+    
+    x = x2 - numerator/denominator;
+    fx = f(x);
+
+    if x < x2
+        if fx >= f2
+            x1 = x;
+        else
+            x3 = x2;
+            x2 = x;
+        end
+    else
+        if fx >= f2
+            x3 = x;
+        else
+            x1 = x2;
+            x2 = x;
+        end
+    end
+end
+
+xmin = x;
+fmin = f(xmin);
+
+disp(['Локальный минимум найден в точке x = ', num2str(xmin)])
+disp(['Значение функции в точке минимума f(xmin) = ', num2str(fmin)])
+
+
